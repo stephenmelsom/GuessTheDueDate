@@ -336,6 +336,9 @@ body::before {
 .field textarea {
   display: block;
   width: 100%;
+  min-width: 0;
+  -webkit-appearance: none;
+  appearance: none;
   padding: 12px 14px;
   font-family: var(--display);
   font-size: 1rem;
@@ -347,6 +350,13 @@ body::before {
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .field textarea { resize: vertical; font-weight: 500; }
+
+/* iOS renders date inputs with an intrinsic min-width that overflows the
+   ticket; resetting appearance (above) lets width:100% apply, and these keep
+   the value left-aligned and the calendar picker tucked to the right. */
+.field input[type="date"] { min-height: 47px; }
+.field input[type="date"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
+.field input[type="date"]::-webkit-calendar-picker-indicator { margin-left: auto; }
 .field input:focus,
 .field select:focus,
 .field textarea:focus {

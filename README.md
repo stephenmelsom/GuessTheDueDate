@@ -4,7 +4,8 @@ A Paddington-bear-themed baby pool. Friends and family guess when the wee
 bear will arrive — official due date **Tuesday, 25 August 2026** — and their
 guesses are collected for you to see.
 
-Everything is a static site (HTML/CSS/JS), so it runs happily on GitHub Pages.
+Everything is a static site (HTML/CSS/JS) hosted on Cloudflare Pages, live at
+**<https://babybets.themelsoms.com>**.
 
 ## ✨ Features
 
@@ -29,12 +30,12 @@ Guesses are collected with [Formspree](https://formspree.io)'s free tier.
 
 1. Sign up at <https://formspree.io> and create a **New form**.
 2. Copy its endpoint — it looks like `https://formspree.io/f/abcdwxyz`.
-3. Open [`script.js`](script.js) and paste it into the `FORM_ENDPOINT`
-   constant near the top:
+3. Open [`public/script.js`](public/script.js) and paste it into the
+   `FORM_ENDPOINT` constant near the top:
    ```js
    const FORM_ENDPOINT = "https://formspree.io/f/abcdwxyz";
    ```
-4. Commit and push.
+4. Redeploy (see below).
 
 Submissions then land in your Formspree inbox (and any email you connect to
 the form). Until you do step 3, the page runs in **demo mode** — guessers
@@ -43,35 +44,35 @@ still get the fun feedback, but nothing is saved.
 > The first time a guess is submitted, Formspree emails you to confirm the
 > form. Click the link once and you're set.
 
-## 🚀 Deploy to GitHub Pages
+## 🚀 Deploy to Cloudflare Pages
 
-This is a plain static site, so no build pipeline is needed — Pages serves
-the files straight from the branch.
+This is a plain static site (no build pipeline). The deployable files live in
+`public/`; `wrangler.toml` sets `pages_build_output_dir = "public"`.
 
-1. Make the repo **public** (**Settings → General → Danger Zone →
-   Change visibility**). Pages is free for public repos and the site is
-   openable by anyone with the link. *(On a private repo, Pages needs a paid
-   plan and forces visitors to log in.)*
-2. **Settings → Pages → Build and deployment**.
-3. Set **Source** to **Deploy from a branch**, branch **`main`**, folder
-   **`/ (root)`**, and **Save**.
-4. Give it a minute, then visit
-   `https://<your-username>.github.io/<repo-name>/`
-   (here: `https://stephenmelsom.github.io/GuessTheDueDate/`).
+Deploy (or redeploy after any edit) with:
+
+```bash
+npx wrangler pages deploy
+```
+
+That uploads `public/` to the `babybets` Cloudflare Pages project. The live
+site is `https://babybets.themelsoms.com` (a proxied CNAME →
+`babybets.pages.dev` in the `themelsoms.com` zone), and the project also stays
+reachable at `https://babybets.pages.dev`.
 
 ## 🧸 Changing the due date
 
 Edit two spots:
 
-- `script.js` → `const DUE_DATE = new Date("2026-08-25T00:00:00");`
-- `index.html` → the "Official due date" text in the countdown section.
+- `public/script.js` → `const DUE_DATE = new Date("2026-08-25T00:00:00");`
+- `public/index.html` → the "Official due date" text in the countdown section.
 
 ## Local preview
 
-Just open `index.html` in a browser, or run a tiny server:
+Open `public/index.html` in a browser, or run a tiny server:
 
 ```bash
-python3 -m http.server 8000
+python3 -m http.server 8000 --directory public
 # then visit http://localhost:8000
 ```
 
