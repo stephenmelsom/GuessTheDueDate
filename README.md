@@ -40,15 +40,19 @@ still get the fun feedback, but nothing is saved.
 
 ## 🚀 Deploy to GitHub Pages
 
-1. Merge this branch into `main` (or your default branch).
-2. In the repo: **Settings → Pages**.
-3. Under **Build and deployment → Source**, choose **GitHub Actions**.
-   - The included workflow at `.github/workflows/deploy.yml` publishes the
-     site automatically on every push to `main`.
-   - *(Alternatively, choose "Deploy from a branch" → `main` / `root` and
-     skip the workflow.)*
-4. Wait for the Pages action to finish, then visit
-   `https://<your-username>.github.io/<repo-name>/`.
+This is a plain static site, so no build pipeline is needed — Pages serves
+the files straight from the branch.
+
+1. Make the repo **public** (**Settings → General → Danger Zone →
+   Change visibility**). Pages is free for public repos and the site is
+   openable by anyone with the link. *(On a private repo, Pages needs a paid
+   plan and forces visitors to log in.)*
+2. **Settings → Pages → Build and deployment**.
+3. Set **Source** to **Deploy from a branch**, branch **`main`**, folder
+   **`/ (root)`**, and **Save**.
+4. Give it a minute, then visit
+   `https://<your-username>.github.io/<repo-name>/`
+   (here: `https://stephenmelsom.github.io/GuessTheDueDate/`).
 
 ## 🧸 Changing the due date
 
