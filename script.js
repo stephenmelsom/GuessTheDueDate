@@ -11,7 +11,7 @@
    get the fun feedback, but submissions aren't sent anywhere.
    =========================================================== */
 
-const FORM_ENDPOINT = "https://formspree.io/f/your-form-id";
+const FORM_ENDPOINT = "https://formspree.io/f/xgobrdya";
 
 // Official due date — Tuesday, 25 August 2026
 const DUE_DATE = new Date("2026-08-25T00:00:00");
