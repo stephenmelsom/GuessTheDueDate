@@ -1,34 +1,54 @@
 /* ===========================================================
-   Guess the Due Date — Paddington edition 🧸
+   Now Arriving — Paddington Station 🚉
    ===========================================================
    SETUP (one time):
    1. Make a free form at https://formspree.io (New form → copy the
       endpoint, it looks like https://formspree.io/f/abcdwxyz).
    2. Paste that endpoint into FORM_ENDPOINT below.
-   3. Commit & push. Guesses will arrive in your Formspree inbox
-      (and any email you connect to the form).
+   3. Commit & push. Guesses arrive in your Formspree inbox.
    Until you do step 2, the form runs in "demo mode": guessers still
    get the fun feedback, but submissions aren't sent anywhere.
    =========================================================== */
 
 const FORM_ENDPOINT = "https://formspree.io/f/xgobrdya";
 
-// Official due date — Tuesday, 25 August 2026
+// Scheduled arrival — Tuesday, 25 August 2026
 const DUE_DATE = new Date("2026-08-25T00:00:00");
 
-/* ---------- Countdown ---------- */
+/* ---------- Arrivals board countdown ---------- */
 function pad(n) { return String(n).padStart(2, "0"); }
+
+const el = (id) => document.getElementById(id);
+
+// Flip a flap tile only when its displayed value actually changes.
+function setFlap(id, value) {
+  const span = el(id);
+  if (!span || span.textContent === value) return;
+  span.textContent = value;
+  const tile = span.closest(".flap");
+  if (!tile) return;
+  tile.classList.remove("flip");
+  // reflow so the animation can replay
+  void tile.offsetWidth;
+  tile.classList.add("flip");
+}
+
+let overdueShown = false;
 
 function tickCountdown() {
   const now = new Date();
   let diff = DUE_DATE - now;
 
-  const el = (id) => document.getElementById(id);
-
   if (diff <= 0) {
-    el("clock").innerHTML =
-      '<p style="font-size:1.3rem;font-weight:700;color:var(--red)">' +
-      'The wee bear has (officially) arrived! 🎉🧸</p>';
+    if (!overdueShown) {
+      el("clock").innerHTML =
+        '<p class="board__arrived">— Standing at the platform —</p>';
+      const chip = el("status-chip");
+      chip.textContent = "Arriving";
+      chip.classList.add("late");
+      el("status-note").textContent = "any moment now";
+      overdueShown = true;
+    }
     return;
   }
 
@@ -37,46 +57,62 @@ function tickCountdown() {
   const mins = Math.floor(diff / 60000); diff -= mins * 60000;
   const secs = Math.floor(diff / 1000);
 
-  el("days").textContent = days;
-  el("hours").textContent = pad(hours);
-  el("minutes").textContent = pad(mins);
-  el("seconds").textContent = pad(secs);
+  setFlap("days", String(days));
+  setFlap("hours", pad(hours));
+  setFlap("minutes", pad(mins));
+  setFlap("seconds", pad(secs));
 }
 
 tickCountdown();
 setInterval(tickCountdown, 1000);
 
-/* ---------- How close is the guess? ---------- */
+/* ---------- How close is the guess? (station voice) ---------- */
 function guessFeedback(guessStr, name) {
   const guess = new Date(guessStr + "T00:00:00");
   const dayMs = 86400000;
   const diffDays = Math.round((guess - DUE_DATE) / dayMs);
-  const who = name ? name.split(" ")[0] : "you";
+  const who = name ? name.split(" ")[0] : "You";
 
   if (diffDays === 0) {
-    return `Spot on, ${who}! You picked the official due date itself. ` +
-      `A marmalade sandwich tips its hat to you. 🍊🎩`;
+    return `Bang on the timetable, ${who} — you've picked the scheduled ` +
+      `arrival itself. The stationmaster doffs his hat. 🎩`;
   }
+
   const absDays = Math.abs(diffDays);
-  const dir = diffDays < 0 ? "earlier than" : "later than";
   const word = absDays === 1 ? "day" : "days";
+  const dir = diffDays < 0 ? "ahead of schedule" : "behind schedule";
+
   let flavour;
-  if (absDays <= 3)      flavour = "So close you can smell the marmalade! 🍞";
+  if (absDays <= 3)       flavour = "Close enough to hear the whistle.";
   else if (absDays <= 10) flavour = "A solid hunch from darkest Peru. 🐻";
-  else if (absDays <= 21) flavour = "Bold! Babies do love a surprise. 🎁";
+  else if (absDays <= 21) flavour = "Bold — but this train keeps its own time.";
   else                    flavour = "A real adventurer's guess. 🧳";
 
-  return `${who}, your guess is ${absDays} ${word} ${dir} the official due ` +
-    `date. ${flavour}`;
+  const late = diffDays > 0
+    ? " (Running late — very much in the Paddington tradition.)"
+    : "";
+
+  return `${who}, your guess is ${absDays} ${word} ${dir}. ${flavour}${late}`;
 }
 
-/* ---------- Form handling ---------- */
+/* ---------- Combine lb + oz into one readable weight ---------- */
+function combinedWeightGuess() {
+  const lb = (el("weight_lb").value || "").trim();
+  const oz = (el("weight_oz").value || "").trim();
+  const parts = [];
+  if (lb !== "") parts.push(lb + " lb");
+  if (oz !== "") parts.push(oz + " oz");
+  return parts.join(" ");
+}
+
+/* ---------- Ticket / form handling ---------- */
 const form = document.getElementById("guess-form");
 const statusEl = document.getElementById("status");
 const submitBtn = document.getElementById("submit-btn");
 const formSection = document.getElementById("form-section");
 const thanksPanel = document.getElementById("thanks");
 const thanksDetail = document.getElementById("thanks-detail");
+const stampDate = document.getElementById("stamp-date");
 const againBtn = document.getElementById("again-btn");
 
 const isConfigured = !FORM_ENDPOINT.includes("your-form-id");
@@ -86,11 +122,16 @@ function setStatus(msg, kind) {
   statusEl.className = "status" + (kind ? " " + kind : "");
 }
 
-function showThanks(detail) {
+function showThanks(detail, guessStr) {
   thanksDetail.textContent = detail;
+  // Stamp the date the guess was logged.
+  const stamped = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit", month: "short", year: "numeric",
+  }).toUpperCase().replace(/ /g, " · ");
+  stampDate.textContent = stamped;
+
   formSection.classList.add("hidden");
   thanksPanel.classList.remove("hidden");
-  rainSandwiches(18);
   thanksPanel.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
@@ -109,31 +150,35 @@ form.addEventListener("submit", async (e) => {
   // Demo mode — no endpoint configured yet.
   if (!isConfigured) {
     setStatus("Demo mode: add a Formspree endpoint in script.js to collect guesses.", "ok");
-    showThanks(feedback + "  (Demo mode — this guess wasn't saved.)");
+    showThanks(feedback + "  (Demo mode — this guess wasn't saved.)", guessStr);
     return;
   }
 
   submitBtn.disabled = true;
-  setStatus("Sending your guess to Paddington Station… 🧳");
+  setStatus("Sending your guess up to the board… 🚉");
 
   try {
+    const data = new FormData(form);
+    const weight = combinedWeightGuess();
+    if (weight) data.set("weight_guess", weight);
+
     const res = await fetch(FORM_ENDPOINT, {
       method: "POST",
       headers: { Accept: "application/json" },
-      body: new FormData(form),
+      body: data,
     });
 
     if (res.ok) {
       form.reset();
-      showThanks(feedback);
+      showThanks(feedback, guessStr);
     } else {
       const data = await res.json().catch(() => ({}));
       const msg = data.errors ? data.errors.map((x) => x.message).join(", ")
                               : "Something went wrong. Please try again.";
-      setStatus("Oh dear: " + msg, "error");
+      setStatus("Signal failure: " + msg, "error");
     }
   } catch (err) {
-    setStatus("Network hiccup — please check your connection and try again.", "error");
+    setStatus("The line's gone quiet — check your connection and try again.", "error");
   } finally {
     submitBtn.disabled = false;
   }
@@ -145,23 +190,3 @@ againBtn.addEventListener("click", () => {
   setStatus("");
   formSection.scrollIntoView({ behavior: "smooth", block: "center" });
 });
-
-/* ---------- Falling marmalade sandwiches ---------- */
-function rainSandwiches(count) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const layer = document.querySelector(".sandwich-rain");
-  const treats = ["🍞", "🍊", "🧸", "🧡", "🎩"];
-  for (let i = 0; i < count; i++) {
-    const s = document.createElement("span");
-    s.textContent = treats[Math.floor(Math.random() * treats.length)];
-    s.style.left = Math.random() * 100 + "vw";
-    s.style.animationDuration = 4 + Math.random() * 4 + "s";
-    s.style.animationDelay = Math.random() * 1.5 + "s";
-    s.style.fontSize = 1.2 + Math.random() * 1.4 + "rem";
-    layer.appendChild(s);
-    setTimeout(() => s.remove(), 10000);
-  }
-}
-
-// A gentle welcome shower on load.
-window.addEventListener("load", () => rainSandwiches(10));

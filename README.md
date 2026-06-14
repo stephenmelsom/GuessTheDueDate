@@ -8,15 +8,20 @@ Everything is a static site (HTML/CSS/JS), so it runs happily on GitHub Pages.
 
 ## ✨ Features
 
-- 🎩 Paddington theme: red hat, blue duffle-coat colours, marmalade jars,
-  a "Please look after this baby. Thank you." luggage tag, and a gentle
-  rain of falling marmalade sandwiches.
-- ⏳ Live countdown to the due date.
-- 📝 Guess form: name, guessed date, optional weight guess, boy/girl hunch,
-  and a message for the baby.
+- 🚉 **Paddington Station** theme: the baby is "the next arrival." A vintage
+  railway arrivals board, British-Rail navy and marmalade-amber, with the
+  countdown shown as a split-flap "Expected in" time and an `ON TIME` status
+  (which everyone knows it never is).
+- 🎫 The guess form is a **platform ticket** — perforated Manila card stock,
+  punched hole and all. Submitting **rubber-stamps** the ticket `GUESS LOGGED`.
+- ⏳ Live countdown to the scheduled arrival, with a mechanical flap-flip on
+  each change.
+- 📝 Guess form: passenger name, guessed arrival date, optional weight guess,
+  a name guess, and a note for the wee bear.
 - 🍊 Instant feedback telling each guesser how far their pick is from the
-  official due date — without revealing other people's guesses.
-- ♿ Respects `prefers-reduced-motion` and works on mobile.
+  scheduled arrival — without revealing other people's guesses.
+- ♿ Respects `prefers-reduced-motion`, has visible keyboard focus, and works
+  down to mobile.
 
 ## 🛠️ Setup — collect the guesses (one time, ~2 minutes)
 
