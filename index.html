@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guess the Due Date 🧸</title>
+  <meta name="description" content="A Paddington-themed baby pool — guess our due date and win marmalade-sized bragging rights!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%B8%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Falling marmalade sandwiches -->
+  <div class="sandwich-rain" aria-hidden="true"></div>
+
+  <main class="card">
+    <header class="hero">
+      <div class="hat" aria-hidden="true">
+        <svg viewBox="0 0 200 120" width="150" role="img" aria-label="Paddington's red hat">
+          <ellipse cx="100" cy="100" rx="92" ry="18" fill="#b5392c"/>
+          <path d="M40 100 Q40 35 100 35 Q160 35 160 100 Z" fill="#c0392b"/>
+          <path d="M40 100 Q40 35 100 35 Q160 35 160 100 Z" fill="none" stroke="#8e2c22" stroke-width="2"/>
+          <rect x="42" y="84" width="116" height="14" rx="7" fill="#8e2c22"/>
+        </svg>
+      </div>
+      <h1>Guess the Due&nbsp;Date</h1>
+      <p class="tagline">A new little bear is on the way 🧸</p>
+
+      <div class="luggage-tag">
+        <span class="hole"></span>
+        Please look after this baby.<br />Thank you.
+      </div>
+    </header>
+
+    <!-- Countdown -->
+    <section class="countdown" aria-label="Countdown to the official due date">
+      <h2>Marmalade is being stockpiled… 🍊</h2>
+      <p class="official">Official due date: <strong>Tuesday, 25 August 2026</strong></p>
+      <div class="clock" id="clock">
+        <div class="unit"><span id="days">--</span><small>days</small></div>
+        <div class="unit"><span id="hours">--</span><small>hours</small></div>
+        <div class="unit"><span id="minutes">--</span><small>mins</small></div>
+        <div class="unit"><span id="seconds">--</span><small>secs</small></div>
+      </div>
+    </section>
+
+    <!-- Guess form -->
+    <section class="form-wrap" id="form-section">
+      <h2>Take a guess from darkest Peru 🐻</h2>
+      <p class="sub">Babies, like Paddington, tend to arrive when they please. When do you think this one will turn up?</p>
+
+      <form id="guess-form" novalidate>
+        <label>
+          Your name
+          <input type="text" name="name" id="name" placeholder="Aunt Lucy" required maxlength="60" autocomplete="name" />
+        </label>
+
+        <label>
+          Your guess for the big day
+          <input type="date" name="guess_date" id="guess_date" required min="2026-06-14" max="2026-12-31" />
+        </label>
+
+        <div class="row">
+          <label>
+            Guess the weight <small>(optional)</small>
+            <input type="text" name="weight_guess" id="weight_guess" placeholder="e.g. 7 lb 8 oz" maxlength="30" />
+          </label>
+          <label>
+            Team marmalade? <small>(optional)</small>
+            <select name="hunch" id="hunch">
+              <option value="">No hunch</option>
+              <option value="Boy bear">Boy bear 💙</option>
+              <option value="Girl bear">Girl bear 💗</option>
+              <option value="Surprise!">Surprise! 🎁</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          A message for the wee bear <small>(optional)</small>
+          <textarea name="message" id="message" rows="2" placeholder="Wishing you a life full of marmalade sandwiches…" maxlength="280"></textarea>
+        </label>
+
+        <button type="submit" id="submit-btn">
+          Send my guess to Paddington Station 🧳
+        </button>
+
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- Thank-you panel (hidden until submit) -->
+    <section class="thanks hidden" id="thanks" aria-live="polite">
+      <div class="marmalade" aria-hidden="true">
+        <svg viewBox="0 0 120 150" width="110" role="img" aria-label="Jar of marmalade">
+          <rect x="34" y="6" width="52" height="14" rx="3" fill="#3b6db5"/>
+          <rect x="28" y="20" width="64" height="118" rx="12" fill="#f3a712"/>
+          <rect x="28" y="20" width="64" height="118" rx="12" fill="none" stroke="#d98a00" stroke-width="3"/>
+          <rect x="34" y="56" width="52" height="44" rx="6" fill="#fff5e0"/>
+          <text x="60" y="84" font-size="13" text-anchor="middle" fill="#8b5a2b" font-family="'Patrick Hand',cursive">MARMALADE</text>
+          <circle cx="44" cy="40" r="3" fill="#c0392b"/>
+          <circle cx="76" cy="44" r="3" fill="#c0392b"/>
+          <circle cx="60" cy="34" r="3" fill="#c0392b"/>
+        </svg>
+      </div>
+      <h2>Guess received! 🧡</h2>
+      <p id="thanks-detail"></p>
+      <button type="button" id="again-btn" class="ghost">Make another guess</button>
+    </section>
+
+    <footer>
+      <p>Made with marmalade &amp; love 🍞🧸</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
