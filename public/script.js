@@ -12,6 +12,21 @@
 
 const FORM_ENDPOINT = "https://formspree.io/f/xgobrdya";
 
+/* ===========================================================
+   BABY FUND (one time):
+   1. In your Stripe account, create a pay-what-you-want Payment
+      Link: a product priced "Customer chooses price" (USD), then
+      a Payment Link for it. Set its after-payment redirect to
+      https://babybets.themelsoms.com/?donated=1
+   2. Paste the link (https://buy.stripe.com/… or donate.stripe.com/…)
+      into DONATE_URL below.
+   Until you do, the Baby Fund section runs in "demo mode": the
+   button is shown but disabled and donations aren't collected.
+   No Stripe secret keys ever live in this file — the hosted
+   Payment Link is the only Stripe surface.
+   =========================================================== */
+const DONATE_URL = "https://buy.stripe.com/7sYcN793sfk3eFq44y08g00";
+
 // Scheduled arrival — Tuesday, 25 August 2026
 const DUE_DATE = new Date("2026-08-25T00:00:00");
 
@@ -190,3 +205,29 @@ againBtn.addEventListener("click", () => {
   setStatus("");
   formSection.scrollIntoView({ behavior: "smooth", block: "center" });
 });
+
+/* ---------- Baby fund (Stripe Payment Link) ---------- */
+const donateBtn = document.getElementById("donate-btn");
+const fundStatus = document.getElementById("fund-status");
+const isDonateConfigured = !DONATE_URL.includes("your-link-id");
+
+function setFundStatus(msg, kind) {
+  fundStatus.textContent = msg;
+  fundStatus.className = "status" + (kind ? " " + kind : "");
+}
+
+if (isDonateConfigured) {
+  donateBtn.href = DONATE_URL;
+} else {
+  // Demo mode — no Payment Link configured yet.
+  donateBtn.setAttribute("aria-disabled", "true");
+  donateBtn.classList.add("is-disabled");
+  donateBtn.addEventListener("click", (e) => e.preventDefault());
+  setFundStatus("Demo mode: add a Stripe Payment Link in script.js to accept donations.", "ok");
+}
+
+// Welcome back the freshly-generous traveller (Stripe redirects here on success).
+if (new URLSearchParams(location.search).has("donated")) {
+  setFundStatus("The buffet car thanks you — that's a lot of marmalade. 🧡", "ok");
+  history.replaceState(null, "", location.pathname);
+}

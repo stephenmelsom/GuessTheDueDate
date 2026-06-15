@@ -417,6 +417,15 @@ body::before {
 .stamp-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--amber-dim); }
 .stamp-btn:disabled { opacity: 0.6; cursor: progress; }
 
+/* Anchor styled as the stamp button (Baby Fund donate link) */
+a.stamp-btn {
+  display: block;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+}
+a.stamp-btn.is-disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+
 .status {
   text-align: center;
   min-height: 1.2em;
