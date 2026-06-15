@@ -425,6 +425,9 @@ a.stamp-btn {
   text-decoration: none;
 }
 a.stamp-btn.is-disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+/* The fund button stands alone (no .ticket__form wrapper) — give it the same
+   breathing room the form provides above the submit button. */
+.fund .stamp-btn { margin-top: clamp(20px, 4vw, 28px); }
 
 .status {
   text-align: center;
