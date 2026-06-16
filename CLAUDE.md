@@ -42,7 +42,7 @@ Three files under `public/`, each owns one concern:
 - `public/script.js` — all behavior. No modules; runs top-to-bottom on load.
 - `public/styles.css` — all styling and the split-flap/stamp animations.
 
-### Three constants drive everything (top of `script.js`)
+### Two constants drive everything (top of `script.js`)
 
 - `DUE_DATE` — the target date. Powers both the live countdown and the
   per-guess "how far off" feedback.
@@ -50,12 +50,6 @@ Three files under `public/`, each owns one concern:
   If it still contains the placeholder `your-form-id`, the app runs in **demo
   mode**: guessers get feedback but nothing is sent. This is the
   `isConfigured` check.
-- `DONATE_URL` — a Stripe **Payment Link** (pay-what-you-want) for the Baby Fund
-  section. Donations are entirely Stripe-hosted; no secret keys live in the repo
-  or browser. If it still contains the placeholder `your-link-id`, the donate
-  button shows but is disabled — the `isDonateConfigured` check (mirrors
-  `isConfigured`). On success Stripe redirects back to `/?donated=1`, which
-  triggers a themed thank-you in `#fund-status`.
 
 ### Key behaviors
 
